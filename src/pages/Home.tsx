@@ -5,12 +5,14 @@ import { StarField } from '@/components/StarField';
 import { RankBadge, getRankFromXP } from '@/components/RankBadge';
 import { loadPlayerStats } from '@/utils/gameLogic';
 import { SettingsDialog } from '@/components/SettingsDialog';
+import { WeakAreasDialog } from '@/components/WeakAreasDialog';
 import { Rocket, Play, Settings } from 'lucide-react';
 
 const Home = () => {
   const navigate = useNavigate();
   const [stats, setStats] = useState(loadPlayerStats());
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [weakAreasOpen, setWeakAreasOpen] = useState(false);
   const rank = getRankFromXP(stats.totalXP);
 
   useEffect(() => {
@@ -67,11 +69,14 @@ const Home = () => {
               <div className="text-2xl font-bold text-primary">{stats.totalXP}</div>
               <div className="text-xs text-muted-foreground">Total XP</div>
             </div>
-            <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-4">
+            <div 
+              className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-4 cursor-pointer hover:bg-card/70 transition-colors"
+              onClick={() => setWeakAreasOpen(true)}
+            >
               <div className="text-2xl font-bold text-secondary">
                 {Object.keys(stats.weakAreas).length}
               </div>
-              <div className="text-xs text-muted-foreground">Tracking</div>
+              <div className="text-xs text-muted-foreground">Need Practice</div>
             </div>
             <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-4">
               <div className="text-2xl font-bold text-success">
@@ -87,6 +92,12 @@ const Home = () => {
         open={settingsOpen} 
         onOpenChange={setSettingsOpen}
         onStatsUpdated={handleStatsUpdated}
+      />
+      
+      <WeakAreasDialog 
+        open={weakAreasOpen}
+        onOpenChange={setWeakAreasOpen}
+        stats={stats}
       />
     </div>
   );
