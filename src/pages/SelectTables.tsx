@@ -49,16 +49,6 @@ const SelectTables = () => {
       <StarField />
 
       <div className="max-w-2xl w-full relative z-10">
-        <div className="mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/')}
-            className="text-primary hover:text-primary/80"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
-          </Button>
-        </div>
 
         <div className="bg-card/90 backdrop-blur-sm border-2 border-border rounded-2xl p-6 shadow-glow-primary">
           <h2 className="text-3xl font-bold mb-2 text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
@@ -131,6 +121,15 @@ const SelectTables = () => {
               </span>
             </div>
           )}
+
+          <Button
+            variant="outline"
+            onClick={() => navigate('/practice')}
+            className="w-full mt-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
         </div>
       </div>
     </div>
