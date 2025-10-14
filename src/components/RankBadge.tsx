@@ -1,0 +1,77 @@
+import { Star, Rocket, Zap } from 'lucide-react';
+
+export type Rank = 'cadet' | 'captain' | 'commander';
+
+interface RankBadgeProps {
+  rank: Rank;
+  xp: number;
+  className?: string;
+}
+
+const RANK_CONFIG = {
+  cadet: {
+    name: 'Space Cadet',
+    icon: Star,
+    color: 'text-muted-foreground',
+    xpRequired: 0,
+    nextRank: 500,
+  },
+  captain: {
+    name: 'Space Captain',
+    icon: Rocket,
+    color: 'text-primary',
+    xpRequired: 500,
+    nextRank: 2000,
+  },
+  commander: {
+    name: 'Space Commander',
+    icon: Zap,
+    color: 'text-secondary',
+    xpRequired: 2000,
+    nextRank: null,
+  },
+};
+
+export const RankBadge = ({ rank, xp, className = '' }: RankBadgeProps) => {
+  const config = RANK_CONFIG[rank];
+  const Icon = config.icon;
+  
+  const progress = config.nextRank 
+    ? ((xp - config.xpRequired) / (config.nextRank - config.xpRequired)) * 100
+    : 100;
+
+  return (
+    <div className={`flex flex-col gap-2 ${className}`}>
+      <div className="flex items-center gap-3">
+        <div className={`p-3 rounded-xl bg-card border-2 border-border ${config.color} shadow-glow-primary`}>
+          <Icon className="w-6 h-6" />
+        </div>
+        <div>
+          <div className={`text-sm font-bold ${config.color}`}>{config.name}</div>
+          <div className="text-xs text-muted-foreground">{xp} XP</div>
+        </div>
+      </div>
+      
+      {config.nextRank && (
+        <div className="w-full">
+          <div className="flex justify-between text-xs text-muted-foreground mb-1">
+            <span>Next rank: {config.nextRank} XP</span>
+            <span>{Math.round(progress)}%</span>
+          </div>
+          <div className="h-2 bg-muted rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500"
+              style={{ width: `${Math.min(progress, 100)}%` }}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export const getRankFromXP = (xp: number): Rank => {
+  if (xp >= 2000) return 'commander';
+  if (xp >= 500) return 'captain';
+  return 'cadet';
+};
