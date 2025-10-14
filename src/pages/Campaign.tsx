@@ -31,11 +31,19 @@ const Campaign = () => {
           <p className="text-xl text-muted-foreground mb-8">
             Journey through the solar system, unlock planets, and discover space facts as you master multiplication!
           </p>
-          <div className="inline-block px-6 py-3 bg-primary/10 border border-primary/30 rounded-lg">
+          <div className="inline-block px-6 py-3 bg-primary/10 border border-primary/30 rounded-lg mb-6">
             <p className="text-primary font-semibold">
               🚀 Coming Soon
             </p>
           </div>
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={() => navigate('/')}
+            className="border-2 hover:border-primary transition-colors"
+          >
+            Back to Menu
+          </Button>
         </div>
       </div>
     </div>
