@@ -38,18 +38,18 @@ export const RankBadge = ({ rank, xp, className = '' }: RankBadgeProps) => {
     : 100;
 
   return (
-    <div className={`flex flex-col gap-2 ${className}`}>
-      <div className="flex items-center gap-3">
-        <div className="p-2 rounded-xl bg-card border-2 border-border shadow-glow-primary overflow-hidden">
+    <div className={`flex flex-col gap-3 ${className}`}>
+      <div className="flex items-center gap-4">
+        <div className="p-3 rounded-2xl bg-card border-2 border-border shadow-glow-primary overflow-hidden animate-glow-pulse">
           <img 
             src={config.image} 
             alt={config.name}
-            className="w-12 h-12 object-cover rounded-lg"
+            className="w-20 h-20 object-cover rounded-xl"
           />
         </div>
         <div>
-          <div className={`text-sm font-bold ${config.color}`}>{config.name}</div>
-          <div className="text-xs text-muted-foreground">{xp} XP</div>
+          <div className={`text-lg font-bold ${config.color}`}>{config.name}</div>
+          <div className="text-sm text-muted-foreground font-semibold">{xp} XP</div>
         </div>
       </div>
       
