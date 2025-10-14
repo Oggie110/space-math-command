@@ -5,8 +5,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 import { PlayerStats } from '@/types/game';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Zap } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface WeakAreasDialogProps {
   open: boolean;
@@ -15,9 +17,30 @@ interface WeakAreasDialogProps {
 }
 
 export const WeakAreasDialog = ({ open, onOpenChange, stats }: WeakAreasDialogProps) => {
+  const navigate = useNavigate();
   const weakAreasList = Object.entries(stats.weakAreas)
     .map(([pair, count]) => ({ pair, count }))
     .sort((a, b) => b.count - a.count);
+
+  const handlePracticeNow = () => {
+    const uniqueNumbers = new Set<number>();
+    Object.keys(stats.weakAreas).forEach(pair => {
+      const [num1, num2] = pair.split('x').map(Number);
+      uniqueNumbers.add(num1);
+      uniqueNumbers.add(num2);
+    });
+    
+    navigate('/game', {
+      state: {
+        settings: {
+          selectedTables: Array.from(uniqueNumbers).sort((a, b) => a - b),
+          maxMultiplier: 12,
+          questionsPerRound: 10,
+        },
+      },
+    });
+    onOpenChange(false);
+  };
 
   const getDifficultyColor = (count: number) => {
     if (count >= 5) return 'text-destructive';
@@ -73,6 +96,19 @@ export const WeakAreasDialog = ({ open, onOpenChange, stats }: WeakAreasDialogPr
             ))
           )}
         </div>
+
+        {weakAreasList.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-border">
+            <Button 
+              onClick={handlePracticeNow} 
+              className="w-full"
+              size="lg"
+            >
+              <Zap className="w-4 h-4 mr-2" />
+              Practice These Now
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
