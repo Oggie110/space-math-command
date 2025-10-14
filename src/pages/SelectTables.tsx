@@ -121,16 +121,16 @@ const SelectTables = () => {
               </span>
             </div>
           )}
-
-          <Button
-            variant="outline"
-            onClick={() => navigate('/practice')}
-            className="w-full mt-4"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
         </div>
+
+        <Button
+          variant="outline"
+          onClick={() => navigate('/practice')}
+          className="w-full mt-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </Button>
       </div>
     </div>
   );
