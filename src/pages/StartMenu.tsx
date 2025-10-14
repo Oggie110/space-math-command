@@ -1,10 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { StarField } from '@/components/StarField';
-import { Rocket, Target, Map } from 'lucide-react';
+import { Rocket, Target, Map, Star } from 'lucide-react';
+import { loadPlayerStats } from '@/utils/gameLogic';
+import { getCompletedWaypointsCount, getTotalWaypoints } from '@/utils/campaignLogic';
 
 const StartMenu = () => {
   const navigate = useNavigate();
+  
+  const stats = loadPlayerStats();
+  const completedWaypoints = stats.campaignProgress ? getCompletedWaypointsCount(stats.campaignProgress) : 0;
+  const totalWaypoints = getTotalWaypoints();
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative">
@@ -26,11 +32,21 @@ const StartMenu = () => {
         <div className="grid gap-6 max-w-md mx-auto">
           <Button
             size="lg"
-            className="w-full h-20 text-xl font-bold bg-primary hover:bg-primary/90 shadow-glow-primary transition-all hover:scale-105"
+            className="w-full h-20 text-xl font-bold bg-primary hover:bg-primary/90 shadow-glow-primary transition-all hover:scale-105 relative overflow-hidden"
             onClick={() => navigate('/campaign')}
           >
-            <Map className="w-6 h-6 mr-3" />
-            Play Campaign
+            <div className="flex items-center justify-center w-full">
+              <Map className="w-6 h-6 mr-3" />
+              <div className="flex flex-col items-start">
+                <span>Play Campaign</span>
+                {completedWaypoints > 0 && (
+                  <span className="text-xs opacity-80 flex items-center gap-1">
+                    <Star className="w-3 h-3 fill-current" />
+                    {completedWaypoints}/{totalWaypoints} waypoints
+                  </span>
+                )}
+              </div>
+            </div>
           </Button>
 
           <Button

@@ -1,16 +1,24 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { StarField } from '@/components/StarField';
 import { RankBadge, getRankFromXP } from '@/components/RankBadge';
+import { StarRating } from '@/components/StarRating';
+import { PlanetFactModal } from '@/components/PlanetFactModal';
 import { Question } from '@/types/game';
-import { calculateXP, updateWeakAreas, loadPlayerStats, savePlayerStats, syncStatsToCloud } from '@/utils/gameLogic';
-import { Trophy, Home, RotateCcw, CheckCircle2, XCircle } from 'lucide-react';
+import { updateWeakAreas, loadPlayerStats, savePlayerStats, syncStatsToCloud } from '@/utils/gameLogic';
+import { calculateStars, calculateCampaignXP, completeWaypoint, initializeCampaignProgress, isLegPerfected, getLegById } from '@/utils/campaignLogic';
+import { celestialBodies } from '@/data/campaignRoute';
+import { Trophy, Home, RotateCcw, CheckCircle2, XCircle, Star as StarIcon } from 'lucide-react';
 
 const Results = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const questions = location.state?.questions as Question[];
+  const { campaignMode, legId, waypointIndex, isReplay } = location.state || {};
+  
+  const [showPlanetModal, setShowPlanetModal] = useState(false);
+  const [unlockedBody, setUnlockedBody] = useState<string | null>(null);
 
   useEffect(() => {
     if (!questions) {
@@ -20,18 +28,50 @@ const Results = () => {
 
     const stats = loadPlayerStats();
     const score = questions.filter(q => q.correct).length;
-    const xpEarned = calculateXP(score, questions.length);
     
-    const updatedStats = {
-      totalXP: stats.totalXP + xpEarned,
-      weakAreas: updateWeakAreas(questions, stats.weakAreas),
-    };
+    if (campaignMode) {
+      const xpEarned = calculateCampaignXP(score, questions.length, isReplay || false);
+      const campaignProgress = stats.campaignProgress || initializeCampaignProgress();
+      
+      const updatedProgress = completeWaypoint(
+        campaignProgress,
+        legId,
+        waypointIndex,
+        score,
+        questions.length
+      );
+      
+      const updatedStats = {
+        totalXP: stats.totalXP + xpEarned,
+        weakAreas: updateWeakAreas(questions, stats.weakAreas),
+        campaignProgress: updatedProgress,
+      };
 
-    savePlayerStats(updatedStats);
-    
-    // Background sync to cloud (non-blocking)
-    syncStatsToCloud(updatedStats);
-  }, [questions, navigate]);
+      savePlayerStats(updatedStats);
+      syncStatsToCloud(updatedStats);
+      
+      // Check if leg was just perfected
+      if (waypointIndex === 4 && isLegPerfected(updatedProgress, legId)) {
+        const leg = getLegById(legId);
+        if (leg) {
+          setUnlockedBody(leg.toBodyId);
+          setShowPlanetModal(true);
+        }
+      }
+    } else {
+      // Practice mode
+      const xpEarned = score * 10;
+      
+      const updatedStats = {
+        totalXP: stats.totalXP + xpEarned,
+        weakAreas: updateWeakAreas(questions, stats.weakAreas),
+        campaignProgress: stats.campaignProgress,
+      };
+
+      savePlayerStats(updatedStats);
+      syncStatsToCloud(updatedStats);
+    }
+  }, [questions, navigate, campaignMode, legId, waypointIndex, isReplay]);
 
   if (!questions) {
     return null;
@@ -40,8 +80,12 @@ const Results = () => {
   const stats = loadPlayerStats();
   const rank = getRankFromXP(stats.totalXP);
   const score = questions.filter(q => q.correct).length;
-  const xpEarned = calculateXP(score, questions.length);
   const percentage = Math.round((score / questions.length) * 100);
+  
+  const stars = campaignMode ? calculateStars(score, questions.length) : 0;
+  const xpEarned = campaignMode 
+    ? calculateCampaignXP(score, questions.length, isReplay || false)
+    : score * 10;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative">
@@ -86,17 +130,32 @@ const Results = () => {
               <div className="text-center mb-6">
                 <Trophy className="w-16 h-16 text-primary mx-auto mb-4 animate-float" />
                 <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  Mission Complete!
+                  {campaignMode ? 'Waypoint Complete!' : 'Mission Complete!'}
                 </h1>
+                
+                {campaignMode && (
+                  <div className="mb-4">
+                    <StarRating stars={stars} size="lg" animated />
+                  </div>
+                )}
+                
                 <div className="text-6xl font-bold text-primary mb-4">{percentage}%</div>
                 <p className="text-lg text-muted-foreground">
                   {score} out of {questions.length} correct
                 </p>
+                
+                {campaignMode && stars < 3 && (
+                  <p className="text-sm text-yellow-400 mt-2">
+                    {stars === 2 ? 'Get 90%+ for 3 stars!' : 'Get 70%+ for 2 stars, 90%+ for 3 stars!'}
+                  </p>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-muted/50 rounded-xl p-4 text-center border border-border">
-                  <div className="text-3xl font-bold text-success mb-1">+{xpEarned}</div>
+                  <div className="text-3xl font-bold text-success mb-1">
+                    +{xpEarned}{isReplay && ' (50%)'}
+                  </div>
                   <div className="text-sm text-muted-foreground">XP Earned</div>
                 </div>
                 <div className="bg-muted/50 rounded-xl p-4 text-center border border-border">
@@ -105,7 +164,7 @@ const Results = () => {
                 </div>
               </div>
 
-              <RankBadge rank={rank} xp={stats.totalXP} className="mb-6" />
+              {!campaignMode && <RankBadge rank={rank} xp={stats.totalXP} className="mb-6" />}
 
               <div className="flex gap-3">
                 <Button
@@ -116,18 +175,59 @@ const Results = () => {
                   <Home className="w-4 h-4 mr-2" />
                   Home
                 </Button>
-                <Button
-                  onClick={() => navigate('/select-tables')}
-                  className="flex-1 bg-primary hover:bg-primary/90 shadow-glow-primary"
-                >
-                  <RotateCcw className="w-4 h-4 mr-2" />
-                  Play Again
-                </Button>
+                {campaignMode ? (
+                  <>
+                    {stars < 3 && (
+                      <Button
+                        onClick={() => navigate('/game', { 
+                          state: { 
+                            settings: location.state.settings,
+                            campaignMode: true,
+                            legId,
+                            waypointIndex,
+                            isReplay: true,
+                          } 
+                        })}
+                        className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-background"
+                      >
+                        <StarIcon className="w-4 h-4 mr-2" />
+                        Retry for 3★
+                      </Button>
+                    )}
+                    <Button
+                      onClick={() => navigate('/campaign')}
+                      className="flex-1 bg-primary hover:bg-primary/90 shadow-glow-primary"
+                    >
+                      <RotateCcw className="w-4 h-4 mr-2" />
+                      Continue
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    onClick={() => navigate('/select-tables')}
+                    className="flex-1 bg-primary hover:bg-primary/90 shadow-glow-primary"
+                  >
+                    <RotateCcw className="w-4 h-4 mr-2" />
+                    Play Again
+                  </Button>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Planet Unlock Modal */}
+      {unlockedBody && (
+        <PlanetFactModal
+          body={celestialBodies[unlockedBody]}
+          open={showPlanetModal}
+          onContinue={() => {
+            setShowPlanetModal(false);
+            navigate('/campaign');
+          }}
+        />
+      )}
     </div>
   );
 };

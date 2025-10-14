@@ -12,6 +12,7 @@ const Game = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const settings = location.state?.settings as GameSettings;
+  const { campaignMode, legId, waypointIndex, isReplay } = location.state || {};
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -58,7 +59,15 @@ const Game = () => {
         setUserAnswer('');
         setShowFeedback(false);
       } else {
-        navigate('/results', { state: { questions: updatedQuestions } });
+        navigate('/results', { 
+          state: { 
+            questions: updatedQuestions,
+            campaignMode,
+            legId,
+            waypointIndex,
+            isReplay,
+          } 
+        });
       }
     }, 1500);
   };
@@ -77,7 +86,10 @@ const Game = () => {
         {/* Progress bar */}
         <div className="mb-6">
           <div className="flex justify-between text-sm text-muted-foreground mb-2">
-            <span>Question {currentIndex + 1} of {questions.length}</span>
+            <span>
+              {campaignMode ? `Waypoint ${waypointIndex + 1}/5` : `Question ${currentIndex + 1} of ${questions.length}`}
+              {isReplay && <span className="ml-2 text-yellow-400">(Replay)</span>}
+            </span>
             <span className="flex items-center gap-1">
               <Zap className="w-4 h-4 text-primary" />
               {questions.filter(q => q.correct).length} correct

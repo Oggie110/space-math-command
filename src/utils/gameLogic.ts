@@ -134,6 +134,7 @@ export const syncStatsToCloud = async (stats: PlayerStats): Promise<void> => {
         player_id: playerId,
         total_xp: stats.totalXP,
         weak_areas: stats.weakAreas,
+        campaign_progress: stats.campaignProgress || null,
         last_synced: new Date().toISOString(),
       });
 
