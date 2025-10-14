@@ -9,7 +9,7 @@ import { Question } from '@/types/game';
 import { updateWeakAreas, loadPlayerStats, savePlayerStats, syncStatsToCloud } from '@/utils/gameLogic';
 import { calculateStars, calculateCampaignXP, completeWaypoint, initializeCampaignProgress, isLegPerfected, getLegById } from '@/utils/campaignLogic';
 import { celestialBodies } from '@/data/campaignRoute';
-import { Trophy, Home, RotateCcw, CheckCircle2, XCircle, Star as StarIcon } from 'lucide-react';
+import { Trophy, Home, RotateCcw, CheckCircle2, XCircle, Star as StarIcon, ArrowLeft } from 'lucide-react';
 
 const Results = () => {
   const location = useLocation();
@@ -215,6 +215,17 @@ const Results = () => {
             </div>
           </div>
         </div>
+
+        {!campaignMode && (
+          <Button
+            variant="outline"
+            onClick={() => navigate('/practice')}
+            className="w-full mt-6"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+        )}
       </div>
 
       {/* Planet Unlock Modal */}
