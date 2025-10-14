@@ -75,7 +75,7 @@ const SelectTables = () => {
               onClick={selectRandom}
               className="flex-1"
             >
-              Random (5-7)
+              Random
             </Button>
             <Button
               variant="outline"
