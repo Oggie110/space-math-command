@@ -43,7 +43,7 @@ const SelectTables = () => {
     const settings: GameSettings = {
       selectedTables,
       maxMultiplier: 12,
-      questionsPerRound: 20,
+      questionsPerRound: 4,
     };
 
     navigate('/game', { state: { settings } });
