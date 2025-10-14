@@ -6,7 +6,7 @@ import { RankBadge, getRankFromXP } from '@/components/RankBadge';
 import { loadPlayerStats } from '@/utils/gameLogic';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { WeakAreasDialog } from '@/components/WeakAreasDialog';
-import { Rocket, Play, Settings, ChevronRight } from 'lucide-react';
+import { Rocket, Play, Settings, ChevronRight, ArrowLeft } from 'lucide-react';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -25,6 +25,14 @@ const Home = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative">
+      <Button
+        variant="outline"
+        size="icon"
+        className="absolute top-4 left-4 z-20 bg-card/90 backdrop-blur-sm border-2 hover:border-primary transition-colors"
+        onClick={() => navigate('/')}
+      >
+        <ArrowLeft className="w-5 h-5" />
+      </Button>
       <StarField />
       
       {/* Settings Button - Top Right */}
