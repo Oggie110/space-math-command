@@ -155,6 +155,16 @@ const Campaign = () => {
             onPlanetClick={handlePlanetClick}
           />
         </div>
+
+        {/* Back to Main Menu */}
+        <Button
+          variant="outline"
+          onClick={() => navigate('/')}
+          className="mt-4"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Main Menu
+        </Button>
       </div>
 
       {/* Planet Fact Modal */}

@@ -130,13 +130,13 @@ export const syncStatsToCloud = async (stats: PlayerStats): Promise<void> => {
     
     const { error } = await supabase
       .from('player_stats')
-      .upsert({
+      .upsert([{
         player_id: playerId,
         total_xp: stats.totalXP,
-        weak_areas: stats.weakAreas,
-        campaign_progress: stats.campaignProgress || null,
+        weak_areas: stats.weakAreas as any,
+        campaign_progress: stats.campaignProgress as any || null,
         last_synced: new Date().toISOString(),
-      });
+      }]);
 
     if (error) {
       console.warn('Background sync failed (this is OK):', error.message);
