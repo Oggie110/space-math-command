@@ -61,7 +61,7 @@ const Home = () => {
             onClick={() => navigate('/select-tables')}
           >
             <Play className="w-5 h-5 mr-2" />
-            Start Mission
+            Choose Tables
           </Button>
 
           <div className="grid grid-cols-3 gap-3 text-center">
