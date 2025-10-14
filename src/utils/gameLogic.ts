@@ -7,11 +7,18 @@ export const generateQuestions = (
   const questions: Question[] = [];
   const { selectedTables, maxMultiplier, questionsPerRound } = settings;
 
-  // Create pool of all possible pairs
+  // Create pool of all possible pairs with weighting
   const allPairs: [number, number][] = [];
   selectedTables.forEach(table => {
     for (let i = 1; i <= maxMultiplier; i++) {
-      allPairs.push([table, i]);
+      // Reduce frequency of x1 and x10 (only include 30% of the time)
+      if (i === 1 || i === 10) {
+        if (Math.random() < 0.3) {
+          allPairs.push([table, i]);
+        }
+      } else {
+        allPairs.push([table, i]);
+      }
     }
   });
 
