@@ -124,7 +124,7 @@ const Campaign = () => {
               onClick={handleStartMission}
               className="w-full bg-primary hover:bg-primary/90 shadow-glow-primary text-lg h-14"
             >
-              <img src="/spaceship-icon.png" alt="Spaceship" className="w-9 h-9 mr-2" />
+              <Rocket className="w-5 h-5 mr-2" />
               Start Mission
             </Button>
           </div>
