@@ -82,7 +82,11 @@ const Campaign = () => {
         </div>
 
         {/* Rank Badge */}
-        <RankBadge rank={rank} xp={stats.totalXP} className="mb-6" />
+        <div className="w-full max-w-2xl">
+          <div className="bg-card/90 backdrop-blur-sm border-2 border-border rounded-2xl p-6 shadow-glow-primary">
+            <RankBadge rank={rank} xp={stats.totalXP} />
+          </div>
+        </div>
 
         {/* Current Mission Card */}
         <div className="w-full max-w-2xl">
