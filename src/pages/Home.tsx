@@ -25,14 +25,6 @@ const Home = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative">
-      <Button
-        variant="outline"
-        size="icon"
-        className="absolute top-4 left-4 z-20 bg-card/90 backdrop-blur-sm border-2 hover:border-primary transition-colors"
-        onClick={() => navigate('/')}
-      >
-        <ArrowLeft className="w-5 h-5" />
-      </Button>
       <StarField />
       
       {/* Settings Button - Top Right */}
@@ -96,6 +88,15 @@ const Home = () => {
               <div className="text-xs text-muted-foreground">Rank</div>
             </div>
           </div>
+
+          <Button
+            variant="outline"
+            onClick={() => navigate('/')}
+            className="w-full mt-2"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Main Menu
+          </Button>
         </div>
       </div>
 

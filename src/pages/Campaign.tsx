@@ -67,15 +67,6 @@ const Campaign = () => {
   return (
     <div className="min-h-screen flex flex-col p-4 relative">
       <StarField />
-      
-      <Button
-        variant="outline"
-        size="icon"
-        className="absolute top-4 left-4 z-20 bg-card/90 backdrop-blur-sm border-2 hover:border-primary transition-colors"
-        onClick={() => navigate('/')}
-      >
-        <ArrowLeft className="w-5 h-5" />
-      </Button>
 
       <div className="flex-1 flex flex-col items-center justify-center max-w-7xl w-full mx-auto relative z-10 gap-6">
         {/* Header */}
