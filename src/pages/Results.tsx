@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { StarField } from '@/components/StarField';
 import { RankBadge, getRankFromXP } from '@/components/RankBadge';
 import { Question } from '@/types/game';
-import { calculateXP, updateWeakAreas, loadPlayerStats, savePlayerStats } from '@/utils/gameLogic';
+import { calculateXP, updateWeakAreas, loadPlayerStats, savePlayerStats, syncStatsToCloud } from '@/utils/gameLogic';
 import { Trophy, Home, RotateCcw, CheckCircle2, XCircle } from 'lucide-react';
 
 const Results = () => {
@@ -28,6 +28,9 @@ const Results = () => {
     };
 
     savePlayerStats(updatedStats);
+    
+    // Background sync to cloud (non-blocking)
+    syncStatsToCloud(updatedStats);
   }, [questions, navigate]);
 
   if (!questions) {

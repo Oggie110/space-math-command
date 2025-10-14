@@ -1,4 +1,5 @@
 import { Question, GameSettings, PlayerStats } from '@/types/game';
+import { supabase } from '@/integrations/supabase/client';
 
 export const generateQuestions = (
   settings: GameSettings,
@@ -88,7 +89,26 @@ export const updateWeakAreas = (
   return updated;
 };
 
+// Generate a unique player ID
+export const generatePlayerId = (): string => {
+  const randomPart = Math.random().toString(36).substring(2, 9);
+  return `space_math_${randomPart}`;
+};
+
+// Get or create player ID
+export const getPlayerId = (): string => {
+  let playerId = localStorage.getItem('spacemath_player_id');
+  if (!playerId) {
+    playerId = generatePlayerId();
+    localStorage.setItem('spacemath_player_id', playerId);
+  }
+  return playerId;
+};
+
 export const loadPlayerStats = (): PlayerStats => {
+  // Ensure player ID exists
+  getPlayerId();
+  
   const stored = localStorage.getItem('spacemath_stats');
   if (stored) {
     return JSON.parse(stored);
@@ -101,4 +121,27 @@ export const loadPlayerStats = (): PlayerStats => {
 
 export const savePlayerStats = (stats: PlayerStats): void => {
   localStorage.setItem('spacemath_stats', JSON.stringify(stats));
+};
+
+// Sync stats to cloud (non-blocking background operation)
+export const syncStatsToCloud = async (stats: PlayerStats): Promise<void> => {
+  try {
+    const playerId = getPlayerId();
+    
+    const { error } = await supabase
+      .from('player_stats')
+      .upsert({
+        player_id: playerId,
+        total_xp: stats.totalXP,
+        weak_areas: stats.weakAreas,
+        last_synced: new Date().toISOString(),
+      });
+
+    if (error) {
+      console.warn('Background sync failed (this is OK):', error.message);
+    }
+  } catch (error) {
+    // Silent fail - sync is optional, game works offline
+    console.warn('Background sync error (this is OK):', error);
+  }
 };

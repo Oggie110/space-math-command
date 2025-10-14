@@ -14,7 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      player_stats: {
+        Row: {
+          last_synced: string | null
+          player_id: string
+          total_xp: number
+          weak_areas: Json
+        }
+        Insert: {
+          last_synced?: string | null
+          player_id: string
+          total_xp?: number
+          weak_areas?: Json
+        }
+        Update: {
+          last_synced?: string | null
+          player_id?: string
+          total_xp?: number
+          weak_areas?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
