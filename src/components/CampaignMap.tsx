@@ -28,7 +28,7 @@ export const CampaignMap = ({ progress, onWaypointClick, onPlanetClick }: Campai
     <div className="relative">
       <div
         ref={scrollRef}
-        className="overflow-x-auto pb-6 hide-scrollbar"
+        className="overflow-x-auto pb-6 pt-32 hide-scrollbar"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         <div className="flex items-center gap-2 min-w-max px-4">
@@ -82,7 +82,7 @@ export const CampaignMap = ({ progress, onWaypointClick, onPlanetClick }: Campai
                             <img 
                               src="/SpaceshipTransparent.png" 
                               alt="Current position" 
-                              className="w-36 h-36 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 animate-float" 
+                              className="w-36 h-36 absolute -top-32 left-1/2 -translate-x-1/2 animate-float" 
                             />
                           )}
                           {isCompleted && (
