@@ -1,4 +1,4 @@
-export type Rank = 'cadet' | 'captain' | 'commander';
+export type Rank = 'cadet' | 'captain' | 'commander' | 'fleet-admiral' | 'star-marshal' | 'cosmic-guardian' | 'galactic-legend';
 
 interface RankBadgeProps {
   rank: Rank;
@@ -26,6 +26,34 @@ const RANK_CONFIG = {
     image: '/rank-commander.png',
     color: 'text-secondary',
     xpRequired: 2000,
+    nextRank: 5000,
+  },
+  'fleet-admiral': {
+    name: 'Fleet Admiral',
+    image: '/rank-fleet-admiral.png',
+    color: 'text-primary',
+    xpRequired: 5000,
+    nextRank: 10000,
+  },
+  'star-marshal': {
+    name: 'Star Marshal',
+    image: '/rank-star-marshal.png',
+    color: 'text-secondary',
+    xpRequired: 10000,
+    nextRank: 25000,
+  },
+  'cosmic-guardian': {
+    name: 'Cosmic Guardian',
+    image: '/rank-cosmic-guardian.png',
+    color: 'text-primary',
+    xpRequired: 25000,
+    nextRank: 50000,
+  },
+  'galactic-legend': {
+    name: 'Galactic Legend',
+    image: '/rank-galactic-legend.png',
+    color: 'text-secondary',
+    xpRequired: 50000,
     nextRank: null,
   },
 };
@@ -72,6 +100,10 @@ export const RankBadge = ({ rank, xp, className = '' }: RankBadgeProps) => {
 };
 
 export const getRankFromXP = (xp: number): Rank => {
+  if (xp >= 50000) return 'galactic-legend';
+  if (xp >= 25000) return 'cosmic-guardian';
+  if (xp >= 10000) return 'star-marshal';
+  if (xp >= 5000) return 'fleet-admiral';
   if (xp >= 2000) return 'commander';
   if (xp >= 500) return 'captain';
   return 'cadet';
