@@ -80,7 +80,7 @@ export const CampaignMap = ({ progress, onWaypointClick, onPlanetClick }: Campai
                         >
                           {isCurrent && !isCompleted && (
                             <img 
-                              src="/spaceship-icon.png" 
+                              src="/SpaceshipTransparent.png" 
                               alt="Current position" 
                               className="w-9 h-9 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-float" 
                             />
