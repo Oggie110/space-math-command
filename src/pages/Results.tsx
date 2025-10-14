@@ -167,14 +167,6 @@ const Results = () => {
               {!campaignMode && <RankBadge rank={rank} xp={stats.totalXP} className="mb-6" />}
 
               <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  onClick={() => navigate('/')}
-                  className="flex-1"
-                >
-                  <Home className="w-4 h-4 mr-2" />
-                  Home
-                </Button>
                 {campaignMode ? (
                   <>
                     {stars < 3 && (
