@@ -9,6 +9,7 @@ import Campaign from "./pages/Campaign";
 import SelectTables from "./pages/SelectTables";
 import Game from "./pages/Game";
 import Results from "./pages/Results";
+import RanksPreview from "./pages/RanksPreview";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/select-tables" element={<SelectTables />} />
           <Route path="/game" element={<Game />} />
           <Route path="/results" element={<Results />} />
+          <Route path="/ranks-preview" element={<RanksPreview />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
