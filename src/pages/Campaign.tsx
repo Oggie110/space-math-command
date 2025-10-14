@@ -84,21 +84,13 @@ const Campaign = () => {
         {/* Current Mission Card */}
         <div className="w-full max-w-2xl">
           <div className="bg-card/90 backdrop-blur-sm border-2 border-border rounded-2xl p-6 shadow-glow-primary">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="text-4xl">{fromBody.emoji}</div>
                 <div className="text-2xl text-muted-foreground">→</div>
                 <div className="text-4xl">{currentBody.emoji}</div>
               </div>
-            </div>
-
-            {/* Rank Badge */}
-            <div className="flex justify-center mb-4">
-              <RankBadge rank={rank} xp={stats.totalXP} />
-            </div>
-
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-right w-full text-center">
+              <div className="text-right">
                 <div className="text-sm text-muted-foreground uppercase tracking-wider">
                   {currentLeg ? getChapterName(currentLeg.chapter) : 'Inner System'}
                 </div>
@@ -106,6 +98,11 @@ const Campaign = () => {
                   Waypoint {campaignProgress.currentWaypointIndex + 1}/5
                 </div>
               </div>
+            </div>
+
+            {/* Rank Badge */}
+            <div className="flex justify-center mb-6">
+              <RankBadge rank={rank} xp={stats.totalXP} />
             </div>
 
             <div className="mb-6">
