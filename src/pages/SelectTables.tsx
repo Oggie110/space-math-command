@@ -8,7 +8,6 @@ import { GameSettings } from '@/types/game';
 const SelectTables = () => {
   const navigate = useNavigate();
   const [selectedTables, setSelectedTables] = useState<number[]>([]);
-  const [rangeStart, setRangeStart] = useState<number | null>(null);
 
   const tables = Array.from({ length: 12 }, (_, i) => i + 1);
 
@@ -20,21 +19,17 @@ const SelectTables = () => {
     }
   };
 
-  const selectRange = (start: number, end: number) => {
-    const range = [];
-    for (let i = Math.min(start, end); i <= Math.max(start, end); i++) {
-      range.push(i);
-    }
-    setSelectedTables(range);
-    setRangeStart(null);
+  const selectAll = () => {
+    // Exclude 1 from "All" selection
+    setSelectedTables(tables.filter(n => n !== 1));
   };
 
-  const handleTableClick = (num: number) => {
-    if (rangeStart === null) {
-      setRangeStart(num);
-    } else {
-      selectRange(rangeStart, num);
-    }
+  const selectRandom = () => {
+    // Select 5-7 random tables, excluding 1
+    const availableTables = tables.filter(n => n !== 1);
+    const count = Math.floor(Math.random() * 3) + 5; // 5-7 random
+    const shuffled = [...availableTables].sort(() => Math.random() - 0.5);
+    setSelectedTables(shuffled.slice(0, count).sort((a, b) => a - b));
   };
 
   const startGame = () => {
@@ -69,25 +64,39 @@ const SelectTables = () => {
           <h2 className="text-3xl font-bold mb-2 text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             Select Multiplication Tables
           </h2>
-          <p className="text-center text-muted-foreground mb-6">
-            {rangeStart ? 'Click another number to select a range' : 'Click to toggle, or select range'}
+          <p className="text-center text-muted-foreground mb-4">
+            Click to toggle individual tables
           </p>
+
+          {/* Quick selection buttons */}
+          <div className="flex gap-3 mb-6">
+            <Button
+              variant="outline"
+              onClick={selectRandom}
+              className="flex-1"
+            >
+              Random (5-7)
+            </Button>
+            <Button
+              variant="outline"
+              onClick={selectAll}
+              className="flex-1"
+            >
+              All
+            </Button>
+          </div>
 
           <div className="grid grid-cols-4 gap-3 mb-6">
             {tables.map(num => (
               <button
                 key={num}
-                onClick={() => {
-                  handleTableClick(num);
-                  if (!rangeStart) toggleTable(num);
-                }}
+                onClick={() => toggleTable(num)}
                 className={`
                   h-16 rounded-xl font-bold text-lg transition-all
                   ${selectedTables.includes(num)
                     ? 'bg-primary text-primary-foreground shadow-glow-primary scale-105'
                     : 'bg-card hover:bg-muted border-2 border-border'
                   }
-                  ${rangeStart === num ? 'ring-2 ring-secondary' : ''}
                 `}
               >
                 {num}
@@ -98,10 +107,7 @@ const SelectTables = () => {
           <div className="flex gap-3">
             <Button
               variant="outline"
-              onClick={() => {
-                setSelectedTables([]);
-                setRangeStart(null);
-              }}
+              onClick={() => setSelectedTables([])}
               className="flex-1"
               disabled={selectedTables.length === 0}
             >
