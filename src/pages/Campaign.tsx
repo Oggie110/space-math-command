@@ -84,7 +84,7 @@ const Campaign = () => {
         {/* Current Mission Card */}
         <div className="w-full max-w-2xl">
           <div className="bg-card/90 backdrop-blur-sm border-2 border-border rounded-2xl p-6 shadow-glow-primary">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
                 <div className="text-4xl">{fromBody.emoji}</div>
                 <div className="text-2xl text-muted-foreground">→</div>
@@ -101,7 +101,7 @@ const Campaign = () => {
             </div>
 
             {/* Rank Badge */}
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-8">
               <RankBadge rank={rank} xp={stats.totalXP} />
             </div>
 
