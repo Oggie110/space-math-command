@@ -6,7 +6,7 @@ import { RankBadge, getRankFromXP } from '@/components/RankBadge';
 import { loadPlayerStats } from '@/utils/gameLogic';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { WeakAreasDialog } from '@/components/WeakAreasDialog';
-import { Rocket, Play, Settings } from 'lucide-react';
+import { Rocket, Play, Settings, ChevronRight } from 'lucide-react';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -65,18 +65,21 @@ const Home = () => {
           </Button>
 
           <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-4">
-              <div className="text-2xl font-bold text-primary">{stats.totalXP}</div>
-              <div className="text-xs text-muted-foreground">Total XP</div>
-            </div>
             <div 
-              className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-4 cursor-pointer hover:bg-card/70 transition-colors"
+              className="bg-card/50 backdrop-blur-sm border-2 border-secondary rounded-xl p-4 cursor-pointer hover:bg-card/70 hover:border-secondary/80 transition-all hover:scale-[1.02] relative group"
               onClick={() => setWeakAreasOpen(true)}
             >
               <div className="text-2xl font-bold text-secondary">
                 {Object.keys(stats.weakAreas).length}
               </div>
-              <div className="text-xs text-muted-foreground">Need Practice</div>
+              <div className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                Need Practice
+                <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </div>
+            <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-4">
+              <div className="text-2xl font-bold text-primary">{stats.totalXP}</div>
+              <div className="text-xs text-muted-foreground">Total XP</div>
             </div>
             <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl p-4">
               <div className="text-2xl font-bold text-success">
