@@ -145,3 +145,65 @@ export const syncStatsToCloud = async (stats: PlayerStats): Promise<void> => {
     console.warn('Background sync error (this is OK):', error);
   }
 };
+
+// Pull stats from cloud by player ID
+export const pullStatsFromCloud = async (playerId: string): Promise<PlayerStats | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('player_stats')
+      .select('*')
+      .eq('player_id', playerId)
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) return null;
+
+    return {
+      totalXP: data.total_xp,
+      weakAreas: data.weak_areas as Record<string, number>,
+    };
+  } catch (error) {
+    console.error('Failed to pull stats from cloud:', error);
+    return null;
+  }
+};
+
+// Merge local and cloud stats (smart merge)
+export const mergeStats = (local: PlayerStats, cloud: PlayerStats): PlayerStats => {
+  // Take the higher XP
+  const totalXP = Math.max(local.totalXP, cloud.totalXP);
+  
+  // Merge weak areas (combine counts)
+  const weakAreas: Record<string, number> = { ...local.weakAreas };
+  Object.entries(cloud.weakAreas).forEach(([key, count]) => {
+    weakAreas[key] = Math.max(weakAreas[key] || 0, count);
+  });
+
+  return { totalXP, weakAreas };
+};
+
+// Restore progress from cloud
+export const restoreProgressFromCloud = async (playerId: string): Promise<{ success: boolean; stats?: PlayerStats; error?: string }> => {
+  try {
+    const cloudStats = await pullStatsFromCloud(playerId);
+    
+    if (!cloudStats) {
+      return { success: false, error: 'No progress found for this code' };
+    }
+
+    const localStats = loadPlayerStats();
+    const mergedStats = mergeStats(localStats, cloudStats);
+    
+    // Update local storage with new player ID and merged stats
+    localStorage.setItem('spacemath_player_id', playerId);
+    savePlayerStats(mergedStats);
+    
+    // Sync back to cloud
+    await syncStatsToCloud(mergedStats);
+
+    return { success: true, stats: mergedStats };
+  } catch (error) {
+    console.error('Restore failed:', error);
+    return { success: false, error: 'Failed to restore progress. Please try again.' };
+  }
+};

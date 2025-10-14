@@ -4,20 +4,36 @@ import { Button } from '@/components/ui/button';
 import { StarField } from '@/components/StarField';
 import { RankBadge, getRankFromXP } from '@/components/RankBadge';
 import { loadPlayerStats } from '@/utils/gameLogic';
-import { Rocket, Play } from 'lucide-react';
+import { SettingsDialog } from '@/components/SettingsDialog';
+import { Rocket, Play, Settings } from 'lucide-react';
 
 const Home = () => {
   const navigate = useNavigate();
   const [stats, setStats] = useState(loadPlayerStats());
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const rank = getRankFromXP(stats.totalXP);
 
   useEffect(() => {
     setStats(loadPlayerStats());
   }, []);
 
+  const handleStatsUpdated = () => {
+    setStats(loadPlayerStats());
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative">
       <StarField />
+      
+      {/* Settings Button - Top Right */}
+      <Button
+        variant="outline"
+        size="icon"
+        className="absolute top-4 right-4 z-20 bg-card/90 backdrop-blur-sm border-2 hover:border-primary transition-colors"
+        onClick={() => setSettingsOpen(true)}
+      >
+        <Settings className="w-5 h-5" />
+      </Button>
       
       <div className="max-w-2xl w-full relative z-10">
         <div className="text-center mb-8 animate-float">
@@ -66,6 +82,12 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      <SettingsDialog 
+        open={settingsOpen} 
+        onOpenChange={setSettingsOpen}
+        onStatsUpdated={handleStatsUpdated}
+      />
     </div>
   );
 };
