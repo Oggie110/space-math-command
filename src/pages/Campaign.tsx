@@ -5,6 +5,7 @@ import { StarField } from '@/components/StarField';
 import { CampaignMap } from '@/components/CampaignMap';
 import { PlanetFactModal } from '@/components/PlanetFactModal';
 import { StarRating } from '@/components/StarRating';
+import { RankBadge, getRankFromXP } from '@/components/RankBadge';
 import { ArrowLeft, Rocket, Trophy } from 'lucide-react';
 import { loadPlayerStats } from '@/utils/gameLogic';
 import { initializeCampaignProgress, generateCampaignMission, getLegById, getCompletedWaypointsCount, getTotalWaypoints, getTotalStarsEarned, isReplayAttempt } from '@/utils/campaignLogic';
@@ -26,6 +27,7 @@ const Campaign = () => {
   const totalWaypoints = getTotalWaypoints();
   const totalStars = getTotalStarsEarned(campaignProgress);
   const maxStars = totalWaypoints * 3;
+  const rank = getRankFromXP(stats.totalXP);
 
   const handleStartMission = () => {
     if (!currentLeg) return;
@@ -78,6 +80,9 @@ const Campaign = () => {
             Master multiplication across the cosmos
           </p>
         </div>
+
+        {/* Rank Badge */}
+        <RankBadge rank={rank} xp={stats.totalXP} className="mb-6" />
 
         {/* Current Mission Card */}
         <div className="w-full max-w-2xl">
