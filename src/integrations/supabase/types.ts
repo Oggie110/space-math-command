@@ -16,18 +16,21 @@ export type Database = {
     Tables: {
       player_stats: {
         Row: {
+          campaign_progress: Json | null
           last_synced: string | null
           player_id: string
           total_xp: number
           weak_areas: Json
         }
         Insert: {
+          campaign_progress?: Json | null
           last_synced?: string | null
           player_id: string
           total_xp?: number
           weak_areas?: Json
         }
         Update: {
+          campaign_progress?: Json | null
           last_synced?: string | null
           player_id?: string
           total_xp?: number
