@@ -1,5 +1,3 @@
-import { Star, Rocket, Zap } from 'lucide-react';
-
 export type Rank = 'cadet' | 'captain' | 'commander';
 
 interface RankBadgeProps {
@@ -11,21 +9,21 @@ interface RankBadgeProps {
 const RANK_CONFIG = {
   cadet: {
     name: 'Space Cadet',
-    icon: Star,
+    image: '/rank-cadet.png',
     color: 'text-muted-foreground',
     xpRequired: 0,
     nextRank: 500,
   },
   captain: {
     name: 'Space Captain',
-    icon: Rocket,
+    image: '/rank-captain.png',
     color: 'text-primary',
     xpRequired: 500,
     nextRank: 2000,
   },
   commander: {
     name: 'Space Commander',
-    icon: Zap,
+    image: '/rank-commander.png',
     color: 'text-secondary',
     xpRequired: 2000,
     nextRank: null,
@@ -34,7 +32,6 @@ const RANK_CONFIG = {
 
 export const RankBadge = ({ rank, xp, className = '' }: RankBadgeProps) => {
   const config = RANK_CONFIG[rank];
-  const Icon = config.icon;
   
   const progress = config.nextRank 
     ? ((xp - config.xpRequired) / (config.nextRank - config.xpRequired)) * 100
@@ -43,8 +40,12 @@ export const RankBadge = ({ rank, xp, className = '' }: RankBadgeProps) => {
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       <div className="flex items-center gap-3">
-        <div className={`p-3 rounded-xl bg-card border-2 border-border ${config.color} shadow-glow-primary`}>
-          <Icon className="w-6 h-6" />
+        <div className="p-2 rounded-xl bg-card border-2 border-border shadow-glow-primary overflow-hidden">
+          <img 
+            src={config.image} 
+            alt={config.name}
+            className="w-12 h-12 object-cover rounded-lg"
+          />
         </div>
         <div>
           <div className={`text-sm font-bold ${config.color}`}>{config.name}</div>
