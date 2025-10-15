@@ -65,6 +65,18 @@ export const CampaignMap = ({ progress, onWaypointClick, onPlanetClick }: Campai
 
                     return (
                       <div key={waypointIndex} className="relative">
+                        {/* Spaceship - positioned relative to container, not button */}
+                        {isCurrent && !isCompleted && (
+                          <div className="absolute -top-[120px] left-1/2 -translate-x-1/2 pointer-events-none z-10">
+                            <img 
+                              src="/SpaceshipTransparent.png" 
+                              alt="Current position" 
+                              className="w-32 h-32 object-contain animate-float" 
+                            />
+                          </div>
+                        )}
+                        
+                        {/* Waypoint button */}
                         <button
                           ref={isCurrent ? currentWaypointRef : undefined}
                           onClick={() => canPlay && onWaypointClick?.(leg.id, waypointIndex)}
@@ -78,15 +90,6 @@ export const CampaignMap = ({ progress, onWaypointClick, onPlanetClick }: Campai
                             ${!isCompleted && !isCurrent && canPlay ? 'border-border bg-card hover:border-primary hover:scale-105' : ''}
                           `}
                         >
-                          {isCurrent && !isCompleted && (
-                            <span className="absolute -top-40 left-1/2 animate-float">
-                              <img 
-                                src="/SpaceshipTransparent.png" 
-                                alt="Current position" 
-                                className="-translate-x-[85%] h-96 w-auto object-contain scale-150" 
-                              />
-                            </span>
-                          )}
                           {isCompleted && (
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                               <StarRating stars={stars} size="sm" showEmpty={false} />
