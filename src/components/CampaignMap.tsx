@@ -67,11 +67,11 @@ export const CampaignMap = ({ progress, onWaypointClick, onPlanetClick }: Campai
                       <div key={waypointIndex} className="relative">
                         {/* Spaceship - positioned relative to container, not button */}
                         {isCurrent && !isCompleted && (
-                          <div className="absolute -top-[100px] left-1/2 -translate-x-1/2 pointer-events-none z-10">
+                          <div className="absolute -top-[100px] left-1/2 -translate-x-1/2 pointer-events-none z-10 animate-float">
                             <img 
                               src="/SpaceshipTransparent.png" 
                               alt="Current position" 
-                              className="w-[200px] h-[200px] object-contain animate-float scale-[2.5]" 
+                              className="w-[200px] h-[200px] object-contain scale-[2.5]" 
                             />
                           </div>
                         )}
